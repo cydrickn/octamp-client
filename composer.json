@@ -1,0 +1,24 @@
+{
+    "name": "cydrickn/swamp-client",
+    "description": "WAMP client for PHP Swoole",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Cydrickn\\SwampClient\\": "src/"
+        },
+        "files": ["src/helpers.php"]
+    },
+    "authors": [
+        {
+            "name": "Cydrick Nonog",
+            "email": "cydrick.dev@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "openswoole/ide-helper": "^4.11"
+    },
+    "require": {
+        "voryx/thruway-common": "^1.0",
+        "react/promise": "^2.9"
+    }
+}
