@@ -1,19 +1,21 @@
 <?php
 
-namespace Cydrickn\SwampClient\Promise;
+namespace SWamp\Client\Promise;
 
 class Deferred
 {
-    private ?PromiseInterface $promise = null;
+    private ?ProgressPromise $promise = null;
     private mixed $resolveCallback;
     private mixed $rejectCallback;
+    private mixed $progressCallback;
 
-    public function promise(): PromiseInterface
+    public function promise(): ProgressPromise
     {
         if ($this->promise === null) {
-            $this->promise = new Promise(function ($resolve, $reject) {
+            $this->promise = new ProgressPromise(function ($resolve, $reject, $progress) {
                 $this->resolveCallback = $resolve;
                 $this->rejectCallback = $reject;
+                $this->progressCallback = $progress;
             });
         }
 
@@ -30,5 +32,11 @@ class Deferred
     {
         $this->promise();
         call_user_func($this->rejectCallback, $reason);
+    }
+
+    public function progress(mixed $progress): void
+    {
+        $this->promise();
+        call_user_func($this->progressCallback, $progress);
     }
 }

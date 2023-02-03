@@ -1,8 +1,7 @@
 <?php
 
-namespace Cydrickn\SwampClient;
+namespace SWamp\Client;
 
-use Thruway\Message\Message;
 use Swoole\Coroutine;
 
 class EventDispatcher

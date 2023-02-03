@@ -1,6 +1,6 @@
 <?php
 
-namespace Cydrickn\SwampClient\Promise;
+namespace SWamp\Client\Promise;
 
 use Co\Channel;
 use Swoole\ArrayObject;
@@ -17,24 +17,27 @@ class Promise implements PromiseInterface
 
     public function __construct(callable $executor)
     {
-        $resolve = function (mixed $value = null) {
-            $this->setResult($value);
-            $this->setState(self::STATE_FULFILLED);
-        };
-        $reject  = function (mixed $value = null) {
-            if ($this->isPending()) {
-                $this->setResult($value);
-                $this->setState(self::STATE_REJECTED);
-            }
-        };
-
         Coroutine::create(function (callable $executor, callable $resolve, callable $reject) {
             try {
                 $executor($resolve, $reject);
             } catch (\Throwable $exception) {
                 $reject($exception);
             }
-        }, $executor, $resolve, $reject);
+        }, $executor, [$this, 'processResolve'], [$this, 'processReject']);
+    }
+
+    public function processResolve(mixed $value = null): void
+    {
+        $this->setResult($value);
+        $this->setState(self::STATE_FULFILLED);
+    }
+
+    public function processReject(mixed $value = null): void
+    {
+        if ($this->isPending()) {
+            $this->setResult($value);
+            $this->setState(self::STATE_REJECTED);
+        }
     }
 
     public function then(?callable $onFulfilled = null, ?callable $onRejected = null): PromiseInterface

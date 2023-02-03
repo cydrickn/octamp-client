@@ -5,12 +5,17 @@ SWamp Client uses [Open Swoole](https://openswoole.com/docs), is a high-performa
 
 We also design the SWamp Client functions to be identical to [AutobahnJS](https://github.com/crossbario/autobahn-js)
 
+The name SWamp is from Swoole + WAMP
+
 ## Supported WAMP Features
 
 - Publish
 - Subscribe
+- Call
+- Call Progressive
+- Register
 
 ## TODOs
 
-- Register
-- Call
+- Call Cancel
+- Call Timeout

@@ -3,10 +3,10 @@
 
 function await(mixed $callback): mixed
 {
-    return (new \Cydrickn\SwampClient\Promise\Promise($callback))->wait();
+    return (new \SWamp\Client\Promise\Promise($callback))->wait();
 }
 
-function promise(callable $callback): \Cydrickn\SwampClient\Promise\Promise
+function promise(callable $callback): \SWamp\Client\Promise\Promise
 {
-    return new \Cydrickn\SwampClient\Promise\Promise($callback);
+    return new \SWamp\Client\Promise\Promise($callback);
 }

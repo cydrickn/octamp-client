@@ -1,6 +1,6 @@
 <?php
 
-namespace Cydrickn\SwampClient\Auth;
+namespace SWamp\Client\Auth;
 
 use Thruway\Message\ChallengeMessage;
 use Thruway\Message\AuthenticateMessage;

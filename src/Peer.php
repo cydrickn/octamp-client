@@ -1,11 +1,13 @@
 <?php
 
-namespace Cydrickn\SwampClient;
+namespace SWamp\Client;
 
 use Co\Http\Client as SwooleClient;
-use Cydrickn\SwampClient\Roles\AbstractRole;
-use Cydrickn\SwampClient\Roles\Publisher;
-use Cydrickn\SwampClient\Roles\Subscriber;
+use SWamp\Client\Roles\AbstractRole;
+use SWamp\Client\Roles\Callee;
+use SWamp\Client\Roles\Caller;
+use SWamp\Client\Roles\Publisher;
+use SWamp\Client\Roles\Subscriber;
 use Swoole\Coroutine;
 use Swoole\WebSocket\Frame;
 use Thruway\Message\AbortMessage;
@@ -18,7 +20,7 @@ use Thruway\Message\WelcomeMessage;
 use Thruway\Serializer\JsonSerializer;
 use Thruway\Serializer\SerializerInterface;
 
-class Client
+class Peer
 {
     protected SwooleClient $client;
     protected Session $session;
@@ -75,6 +77,8 @@ class Client
     {
         $this->roles['publisher'] = new Publisher();
         $this->roles['subscriber'] = new Subscriber();
+        $this->roles['caller'] = new Caller();
+        $this->roles['callee'] = new Callee();
 
         $this->session = new Session($this);
         $this->session->setState(Session::STATE_DOWN);
@@ -154,29 +158,9 @@ class Client
 
     protected function getRoleInfo(): array
     {
-        return [
-            'caller' => [
-                'features' => [
-                    'caller_identification' => true,
-                    'progressive_call_results' => true
-                ]
-            ],
-            'callee' => ['features' => $this->roles['publisher']->getFeatures()],
-            'publisher' => [
-                'features' => [
-                    'publisher_identification' => true,
-                    'subscriber_blackwhite_listing' => true,
-                    'publisher_exclusion' => true
-                ]
-            ],
-            'subscriber' => [
-                'features' => [
-                    'publisher_identification' => true,
-                    'pattern_based_subscription' => true,
-                    'subscription_revocation' => true
-                ]
-            ]
-        ];
+        return array_map(function ($role) {
+            return [ 'features' => $role->getFeatures() ];
+        }, $this->roles);
     }
 
     public function getPublisher(): Publisher
@@ -187,5 +171,15 @@ class Client
     public function getSubscriber(): Subscriber
     {
         return $this->roles['subscriber'];
+    }
+
+    public function getCaller(): Caller
+    {
+        return $this->roles['caller'];
+    }
+
+    public function getCallee(): Callee
+    {
+        return $this->roles['callee'];
     }
 }

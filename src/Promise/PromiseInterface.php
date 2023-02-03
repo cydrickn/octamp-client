@@ -1,6 +1,6 @@
 <?php
 
-namespace Cydrickn\SwampClient\Promise;
+namespace SWamp\Client\Promise;
 
 interface PromiseInterface
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Cydrickn\SwampClient\Roles;
+namespace SWamp\Client\Roles;
 
-use Cydrickn\SwampClient\Session;
+use SWamp\Client\Session;
 use Thruway\Message\Message;
 
 abstract class AbstractRole

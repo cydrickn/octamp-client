@@ -1,10 +1,10 @@
 <?php
 
-namespace Cydrickn\SwampClient\Roles;
+namespace SWamp\Client\Roles;
 
-use Cydrickn\SwampClient\Promise\Deferred;
-use Cydrickn\SwampClient\Promise\PromiseInterface;
-use Cydrickn\SwampClient\Session;
+use SWamp\Client\Promise\Deferred;
+use SWamp\Client\Promise\PromiseInterface;
+use SWamp\Client\Session;
 use Thruway\Common\Utils;
 use Thruway\Message\ErrorMessage;
 use Thruway\Message\Message;
@@ -24,6 +24,7 @@ class Publisher extends AbstractRole
     {
         $features = new \stdClass();
 
+        $features->publisher_identification = true;
         $features->subscriber_blackwhite_listing = true;
         $features->publisher_exclusion = true;
 

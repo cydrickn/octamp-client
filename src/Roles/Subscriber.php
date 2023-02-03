@@ -1,9 +1,9 @@
 <?php
 
-namespace Cydrickn\SwampClient\Roles;
+namespace SWamp\Client\Roles;
 
-use Cydrickn\SwampClient\Promise\Deferred;
-use Cydrickn\SwampClient\Session;
+use SWamp\Client\Promise\Deferred;
+use SWamp\Client\Session;
 use Thruway\Common\Utils;
 use Thruway\Message\ErrorMessage;
 use Thruway\Message\EventMessage;
@@ -25,7 +25,12 @@ class Subscriber extends AbstractRole
     public function getFeatures(): \stdClass
     {
         $features = new \stdClass();
-        $features->subscriber_metaevents = true;
+        $features->publisher_identification = true;
+        $features->pattern_based_subscription = true;
+        $features->subscription_revocation = true;
+        // $features->publication_trustlevels = true;
+        // $features->subscriber_metaevents = true;
+        // $features->event_history = true;
 
         return $features;
     }
@@ -107,8 +112,7 @@ class Subscriber extends AbstractRole
                     $subscription['callback'],
                     $msg->getArguments(),
                     $msg->getArgumentsKw(),
-                    $msg->getDetails(),
-                    $msg->getPublicationId()
+                    $msg->getDetails()
                 );
             }
         }
