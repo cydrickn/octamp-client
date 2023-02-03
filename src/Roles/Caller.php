@@ -3,6 +3,7 @@
 namespace SWamp\Client\Roles;
 
 use SWamp\Client\Promise\Deferred;
+use SWamp\Client\Promise\ProgressablePromiseInterface;
 use SWamp\Client\Promise\ProgressPromise;
 use SWamp\Client\Result;
 use SWamp\Client\Session;
@@ -112,7 +113,7 @@ class Caller extends AbstractRole
         }
     }
 
-    public function call(Session $session, $procedureName, $arguments = null, $argumentsKw = null, $options = null): ProgressPromise
+    public function call(Session $session, $procedureName, $arguments = null, $argumentsKw = null, $options = null): ProgressablePromiseInterface
     {
         $requestId = Utils::getUniqueId();
 

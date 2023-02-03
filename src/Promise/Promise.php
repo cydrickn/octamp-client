@@ -75,70 +75,9 @@ class Promise implements PromiseInterface
         return $this->result;
     }
 
-    final public static function await(callable $promise): mixed
-    {
-        return (static::create($promise))->wait();
-    }
-
     final public static function create(callable $promise): PromiseInterface
     {
         return new static($promise);
-    }
-
-    final public static function resolve(mixed $value): PromiseInterface
-    {
-        return new static(function (callable $resolve) use ($value) {
-            $resolve($value);
-        });
-    }
-
-    final public static function reject(mixed $value): PromiseInterface
-    {
-        return new static(function (callable $resolve, callable $reject) use ($value) {
-            $reject($value);
-        });
-    }
-
-    public static function all(array $promises): PromiseInterface
-    {
-        return self::create(function (callable $resolve, callable $reject) use ($promises) {
-            $ticks = count($promises);
-
-            $firstError = null;
-            $channel    = new Channel($ticks);
-            $result     = new ArrayObject();
-            $key        = 0;
-            foreach ($promises as $promise) {
-                if (!$promise instanceof Promise) {
-                    $channel->close();
-                    throw new \RuntimeException(
-                        'Supported only Streamcommon\Promise\ExtSwoolePromise instance'
-                    );
-                }
-                $promise->then(function ($value) use ($key, $result, $channel) {
-                    $result->set($key, $value);
-                    $channel->push(true);
-                    return $value;
-                }, function ($error) use ($channel, &$firstError) {
-                    $channel->push(true);
-                    if ($firstError === null) {
-                        $firstError = $error;
-                    }
-                });
-                $key++;
-            }
-            while ($ticks--) {
-                $channel->pop();
-            }
-            $channel->close();
-
-            if ($firstError !== null) {
-                $reject($firstError);
-                return;
-            }
-
-            $resolve($result);
-        });
     }
 
     final protected function setState(int $state): void

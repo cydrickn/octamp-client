@@ -13,11 +13,13 @@ class Session
     const STATE_UP = 3;
     const STATE_DOWN = 4;
 
-    protected int $sessionId;
+    protected ?int $sessionId;
     protected int $state;
 
     public function __construct(protected Peer $peer)
     {
+        $this->state = self::STATE_UNKNOWN;
+        $this->sessionId = null;
     }
 
     public function subscribe(string $topicName, callable $callback, array|object $options = []): PromiseInterface
@@ -50,12 +52,22 @@ class Session
         $this->sessionId = $sessionId;
     }
 
+    public function getSessionId(): ?int
+    {
+        return $this->sessionId;
+    }
+
     public function setState(int $state): void
     {
         $this->state = $state;
     }
 
-    public function sendMessage(Message $message)
+    public function getState(): int
+    {
+        return $this->state;
+    }
+
+    public function sendMessage(Message $message): void
     {
         $this->peer->sendMessage($message);
     }

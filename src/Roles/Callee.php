@@ -5,6 +5,7 @@ namespace SWamp\Client\Roles;
 use SWamp\Client\Peer;
 use SWamp\Client\Promise\CancellablePromiseInterface;
 use SWamp\Client\Promise\Deferred;
+use SWamp\Client\Promise\ProgressablePromiseInterface;
 use SWamp\Client\Promise\ProgressPromise;
 use SWamp\Client\Promise\PromiseInterface;
 use SWamp\Client\Result;
@@ -323,7 +324,7 @@ class Callee extends AbstractRole
         }
     }
 
-    public function register(Session $session, $procedureName, callable $callback, array|object $options = []): ProgressPromise
+    public function register(Session $session, $procedureName, callable $callback, array|object $options = []): ProgressablePromiseInterface
     {
         $futureResult = new Deferred();
 

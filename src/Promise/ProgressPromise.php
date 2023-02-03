@@ -6,7 +6,7 @@ use Swoole\Coroutine;
 
 class ProgressPromise extends Promise implements ProgressablePromiseInterface
 {
-    protected $handlers = [];
+    protected array $handlers = [];
 
     public function __construct(callable $executor)
     {
@@ -20,7 +20,9 @@ class ProgressPromise extends Promise implements ProgressablePromiseInterface
     }
     public function then(?callable $onFulfilled = null, ?callable $onRejected = null, ?callable $onProgress = null): ProgressablePromiseInterface
     {
-        $this->handlers[] = $onProgress;
+        if ($onProgress !== null) {
+            $this->handlers[] = $onProgress;
+        }
         return parent::then($onFulfilled, $onRejected);
     }
 

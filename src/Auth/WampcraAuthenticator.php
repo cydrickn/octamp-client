@@ -16,7 +16,7 @@ class WampcraAuthenticator
     /**
      * @var string
      */
-    public string $derivedKey;
+    public ?string $derivedKey;
 
     /**
      * @var string
@@ -54,8 +54,8 @@ class WampcraAuthenticator
      */
     public function getAuthenticateFromChallenge(ChallengeMessage $msg): AuthenticateMessage|bool
     {
-//        Logger::info($this, 'Got challenge');
-//        Logger::debug($this, 'Challenge Message: ' . json_encode($msg));
+        // Logger::info($this, 'Got challenge');
+        // Logger::debug($this, 'Challenge Message: ' . json_encode($msg));
 
 
         if (!in_array($msg->getAuthMethod(), $this->getAuthMethods(), true)) {
@@ -64,15 +64,10 @@ class WampcraAuthenticator
         }
 
         $details = $msg->getDetails();
-        if (!is_object($details)) {
-//            Logger::info($this, 'No details sent with challenge');
-            return false;
-        }
-
         if (isset($details->challenge)) {
             $challenge = $details->challenge;
         } else {
-//            Logger::info($this, 'No challenge for wampcra?');
+            // Logger::info($this, 'No challenge for wampcra?');
             return false;
         }
 
@@ -84,17 +79,19 @@ class WampcraAuthenticator
             if (isset($details->keylen)) {
                 if (is_numeric($details->keylen)) {
                     $keyLen = $details->keylen;
-                } else {
-//                    Logger::error($this, 'keylen is not numeric.');
                 }
+                // else {
+                //    Logger::error($this, 'keylen is not numeric.');
+                // }
             }
             $iterations = 1000;
             if (isset($details->iterations)) {
                 if (is_numeric($details->iterations)) {
                     $iterations = $details->iterations;
-                } else {
-//                    Logger::error($this, 'iterations is not numeric.');
                 }
+                // else {
+                //    Logger::error($this, 'iterations is not numeric.');
+                // }
             }
 
             $keyToUse = Utils::getDerivedKey($this->key, $salt, $iterations, $keyLen);
@@ -104,7 +101,7 @@ class WampcraAuthenticator
 
         $authMessage = new AuthenticateMessage($token);
 
-//        Logger::debug($this, 'returning: ' . json_encode($authMessage));
+        // Logger::debug($this, 'returning: ' . json_encode($authMessage));
 
         return $authMessage;
     }
