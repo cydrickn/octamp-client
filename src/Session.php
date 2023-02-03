@@ -20,7 +20,7 @@ class Session
     {
     }
 
-    public function subscribe(string $topicName, callable $callback, array|object $options = [])
+    public function subscribe(string $topicName, callable $callback, array|object $options = []): PromiseInterface
     {
         return $this->peer->getSubscriber()->subscribe($this, $topicName, $callback, $options);
     }

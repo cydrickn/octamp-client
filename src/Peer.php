@@ -153,7 +153,9 @@ class Peer
 
     public function sendMessage(Message $message)
     {
-        $this->client->push(json_encode($message));
+        Coroutine::create(function ($message) {
+            $this->client->push(json_encode($message));
+        }, $message);
     }
 
     protected function getRoleInfo(): array
