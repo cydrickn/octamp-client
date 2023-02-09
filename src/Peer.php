@@ -71,6 +71,7 @@ class Peer
 
         Coroutine\go(function () {
             while ($this->client->connected) {
+                usleep(1);
                 $data = $this->client->recv();
                 Coroutine\go(function ($data) {
                     $this->onMessage($data);
@@ -81,10 +82,18 @@ class Peer
 
     protected function startSession(): void
     {
-        $this->roles['publisher'] = new Publisher();
-        $this->roles['subscriber'] = new Subscriber();
-        $this->roles['caller'] = new Caller();
-        $this->roles['callee'] = new Callee();
+        if (!$this->hasRole('publisher')) {
+            $this->setPublisher(new Publisher());
+        }
+        if (!$this->hasRole('subscriber')) {
+            $this->setSubscriber(new Subscriber());
+        }
+        if (!$this->hasRole('caller')) {
+            $this->setCaller(new Caller());
+        }
+        if (!$this->hasRole('callee')) {
+            $this->setCallee(new Callee());
+        }
 
         $this->session = new Session($this);
         $this->session->setState(Session::STATE_DOWN);
@@ -101,7 +110,7 @@ class Peer
     public function onMessage(Frame|bool $data): void
     {
         if (!$data) {
-            return;
+            return;  // @codeCoverageIgnore
         }
 
         $message = $this->serializer->deserialize($data->data);
@@ -172,9 +181,19 @@ class Peer
         }, $this->roles);
     }
 
+    public function setPublisher(Publisher $publisher): void
+    {
+        $this->roles['publisher'] = $publisher;
+    }
+
     public function getPublisher(): Publisher
     {
         return $this->roles['publisher'];
+    }
+
+    public function setSubscriber(Subscriber $subscriber): void
+    {
+        $this->roles['subscriber'] = $subscriber;
     }
 
     public function getSubscriber(): Subscriber
@@ -182,13 +201,33 @@ class Peer
         return $this->roles['subscriber'];
     }
 
+    public function setCaller(Caller $caller): void
+    {
+        $this->roles['caller'] = $caller;
+    }
+
     public function getCaller(): Caller
     {
         return $this->roles['caller'];
     }
 
+    public function setCallee(Callee $callee): void
+    {
+        $this->roles['callee'] = $callee;
+    }
+
     public function getCallee(): Callee
     {
         return $this->roles['callee'];
+    }
+
+    public function getSession(): Session
+    {
+        return $this->session;
+    }
+
+    public function hasRole(string $name): bool
+    {
+        return isset($this->roles[$name]);
     }
 }

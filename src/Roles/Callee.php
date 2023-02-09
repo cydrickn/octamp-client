@@ -65,19 +65,19 @@ class Callee extends AbstractRole
 
     public function onMessage(Session $session, Message $msg): void
     {
-        if ($msg instanceof RegisteredMessage):
+        if ($msg instanceof RegisteredMessage) {
             $this->processRegistered($msg);
-        elseif ($msg instanceof UnregisteredMessage):
+        } elseif ($msg instanceof UnregisteredMessage) {
             $this->processUnregistered($msg);
-        elseif ($msg instanceof InvocationMessage):
+        } elseif ($msg instanceof InvocationMessage) {
             $this->processInvocation($session, $msg);
-        elseif ($msg instanceof InterruptMessage):
+        } elseif ($msg instanceof InterruptMessage) {
             $this->processInterrupt($session, $msg);
-        elseif ($msg instanceof ErrorMessage):
+        } elseif ($msg instanceof ErrorMessage) {
             $this->processError($session, $msg);
-        else:
+        } else {
             $session->sendMessage(ErrorMessage::createErrorMessageFromMessage($msg));
-        endif;
+        }
     }
 
     protected function processRegistered(RegisteredMessage $msg)
@@ -115,7 +115,8 @@ class Callee extends AbstractRole
 //        Logger::error($this, "Got an Unregistered Message, but couldn't find corresponding request");
     }
 
-    private function processExceptionFromRPCCall(Session $session, InvocationMessage $msg, $registration, \Exception $e) {
+    private function processExceptionFromRPCCall(Session $session, InvocationMessage $msg, $registration, \Exception $e)
+    {
         if ($e instanceof WampErrorException) {
             $errorMsg = ErrorMessage::createErrorMessageFromMessage($msg);
             $errorMsg->setErrorURI($e->getErrorUri());
@@ -128,7 +129,7 @@ class Callee extends AbstractRole
         }
 
         $errorMsg = ErrorMessage::createErrorMessageFromMessage($msg);
-        $errorMsg->setErrorURI($registration['procedure_name'].'.error');
+        $errorMsg->setErrorURI($registration['procedure_name'] . '.error');
         $errorMsg->setArguments([$e->getMessage()]);
         $errorMsg->setArgumentsKw($e);
 
@@ -214,12 +215,12 @@ class Callee extends AbstractRole
                 }
 
                 $errorMsg = ErrorMessage::createErrorMessageFromMessage($msg);
-                $errorMsg->setErrorURI($registration['procedure_name'].'.error');
+                $errorMsg->setErrorURI($registration['procedure_name'] . '.error');
 
                 $session->sendMessage($errorMsg);
             },
             function ($results) use ($msg, $session, $registration) {
-                $options           = new \stdClass();
+                $options = new \stdClass();
                 $options->progress = true;
                 if ($results instanceof Result) {
                     $yieldMsg = new YieldMessage($msg->getRequestId(), $options, $results->getArguments(),
@@ -308,7 +309,7 @@ class Callee extends AbstractRole
             Message::MSG_UNREGISTERED,
             Message::MSG_INVOCATION,
             Message::MSG_REGISTER,
-            Message::MSG_INTERRUPT
+            Message::MSG_INTERRUPT,
         ];
 
         $codeToCheck = $msg->getMsgCode();
@@ -328,14 +329,14 @@ class Callee extends AbstractRole
     {
         $futureResult = new Deferred();
 
-        $requestId    = Utils::getUniqueId();
-        $options      = (object) $options;
+        $requestId = Utils::getUniqueId();
+        $options = (object)$options;
         $registration = [
             'procedure_name' => $procedureName,
-            'callback'       => $callback,
-            'request_id'     => $requestId,
-            'options'        => $options,
-            'futureResult'   => $futureResult
+            'callback' => $callback,
+            'request_id' => $requestId,
+            'options' => $options,
+            'futureResult' => $futureResult,
         ];
 
         $this->registrations[] = $registration;
@@ -394,7 +395,7 @@ class Callee extends AbstractRole
         // save the request id so we can find this in the registration
         // list to call the deferred and remove it from the list
         $registration['unregister_request_id'] = $requestId;
-        $registration['unregister_deferred']   = $futureResult;
+        $registration['unregister_deferred'] = $futureResult;
 
         $unregisterMsg = new UnregisterMessage($requestId, $registration['registration_id']);
 

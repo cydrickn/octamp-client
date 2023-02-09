@@ -33,13 +33,13 @@ class Publisher extends AbstractRole
 
     public function onMessage(Session $session, Message $msg): void
     {
-        if ($msg instanceof PublishedMessage):
+        if ($msg instanceof PublishedMessage) {
             $this->processPublished($msg);
-        elseif ($msg instanceof ErrorMessage):
+        } elseif ($msg instanceof ErrorMessage) {
             $this->processError($msg);
-        else:
+        } else {
             $session->sendMessage(ErrorMessage::createErrorMessageFromMessage($msg));
-        endif;
+        }
     }
 
     protected function processPublished(PublishedMessage $msg)

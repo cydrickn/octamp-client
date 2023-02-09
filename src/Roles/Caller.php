@@ -48,14 +48,13 @@ class Caller extends AbstractRole
 
     public function onMessage(Session $session, Message $msg): void
     {
-
-        if ($msg instanceof ResultMessage):
+        if ($msg instanceof ResultMessage) {
             $this->processResult($msg);
-        elseif ($msg instanceof ErrorMessage):
+        } elseif ($msg instanceof ErrorMessage) {
             $this->processError($msg);
-        else:
+        } else {
             $session->sendMessage(ErrorMessage::createErrorMessageFromMessage($msg));
-        endif;
+        }
     }
 
     protected function processResult(ResultMessage $msg): void
@@ -113,7 +112,7 @@ class Caller extends AbstractRole
         }
     }
 
-    public function call(Session $session, $procedureName, $arguments = null, $argumentsKw = null, $options = null): ProgressablePromiseInterface
+    public function call(Session $session, string $procedureName, ?array $arguments = null, array|object $argumentsKw = [], array|object $options = []): ProgressablePromiseInterface
     {
         $requestId = Utils::getUniqueId();
 
@@ -128,16 +127,7 @@ class Caller extends AbstractRole
             'future_result'  => $futureResult
         ];
 
-        if (is_array($options)) {
-            $options = (object) $options;
-        }
-
-        if (!is_object($options)) {
-            if ($options !== null) {
-//                Logger::warning($this, "Options don't appear to be the correct type.");
-            }
-            $options = new \stdClass();
-        }
+        $options = (object) $options;
 
         $callMsg = new CallMessage($requestId, $options, $procedureName, $arguments, $argumentsKw);
 

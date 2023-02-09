@@ -37,17 +37,17 @@ class Subscriber extends AbstractRole
 
     public function onMessage(Session $session, Message $msg): void
     {
-        if ($msg instanceof SubscribedMessage):
+        if ($msg instanceof SubscribedMessage) {
             $this->processSubscribed($session, $msg);
-        elseif ($msg instanceof UnsubscribedMessage):
+        } elseif ($msg instanceof UnsubscribedMessage) {
             $this->processUnsubscribed($session, $msg);
-        elseif ($msg instanceof EventMessage):
+        } elseif ($msg instanceof EventMessage) {
             $this->processEvent($session, $msg);
-        elseif ($msg instanceof ErrorMessage):
+        } elseif ($msg instanceof ErrorMessage) {
             $this->processError($session, $msg);
-        else:
+        } else {
             $session->sendMessage(ErrorMessage::createErrorMessageFromMessage($msg));
-        endif;
+        }
     }
 
     protected function processError(Session $session, ErrorMessage $msg)
@@ -136,7 +136,6 @@ class Subscriber extends AbstractRole
 
         return in_array($codeToCheck, $handledMsgCodes, true);
     }
-
 
     public function subscribe(Session $session, $topicName, callable $callback, array|object $options = [])
     {
