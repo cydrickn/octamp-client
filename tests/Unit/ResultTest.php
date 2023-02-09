@@ -1,8 +1,8 @@
 <?php
 
-namespace SWamp\Client\Tests\Unit;
+namespace Octamp\Client\Tests\Unit;
 
-use SWamp\Client\Result;
+use Octamp\Client\Result;
 
 class ResultTest extends TestCase
 {

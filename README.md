@@ -1,11 +1,11 @@
-# SWamp Client
-SWamp Client is an open source client for [WAMP (Web Application Messaging Protocol)](https://wamp-proto.org/), for PHP.
+# Octamp Client
+Octamp Client is an open source client for [WAMP (Web Application Messaging Protocol)](https://wamp-proto.org/), for PHP.
 
-SWamp Client uses [Open Swoole](https://openswoole.com/docs), is a high-performance network framework based on an event-driven, asynchronous, non-blocking I/O coroutine programming model for PHP.
+Octamp Client uses [Open Swoole](https://openswoole.com/docs), is a high-performance network framework based on an event-driven, asynchronous, non-blocking I/O coroutine programming model for PHP.
 
-We also design the SWamp Client functions to be identical to [AutobahnJS](https://github.com/crossbario/autobahn-js)
+We also design the Octamp Client functions to be identical to [AutobahnJS](https://github.com/crossbario/autobahn-js)
 
-The name SWamp is from Swoole + WAMP
+The name Octamp is from Octopus + WAMP
 
 ## Supported WAMP Features
 
@@ -23,7 +23,7 @@ The name SWamp is from Swoole + WAMP
 ## Installation
 
 ```sh
-composer require swamp/client
+composer require octamp/client
 ```
 
 ## Example
@@ -31,9 +31,9 @@ composer require swamp/client
 ```php
 <?php
 
-use SWamp\Client\Auth\WampcraAuthenticator;
-use SWamp\Client\Peer;
-use SWamp\Client\Session;
+use Octamp\Client\Auth\WampcraAuthenticator;
+use Octamp\Client\Peer;
+use Octamp\Client\Session;
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
@@ -46,11 +46,11 @@ $client->onOpen(function (Session $session) {
     });
 
     // publish
-    $session->publish('hello', ['hello swamp'], [], ['exclude_me' => false]);
+    $session->publish('hello', ['hello octamp'], [], ['exclude_me' => false]);
 
     // publish with acknowledgement
     $session
-        ->publish('hello', ['hello swamp with acknowledgement'], [], ['acknowledge' => true, 'exclude_me' => false])
+        ->publish('hello', ['hello octamp with acknowledgement'], [], ['acknowledge' => true, 'exclude_me' => false])
         ->then(
             function () {
                 echo 'Publish Acknowledged!' . PHP_EOL;

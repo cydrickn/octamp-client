@@ -1,6 +1,6 @@
 <?php
 
-namespace SWamp\Client\Promise;
+namespace Octamp\Client\Promise;
 
 use Co\Channel;
 use Swoole\ArrayObject;

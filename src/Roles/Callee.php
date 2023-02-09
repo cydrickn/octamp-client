@@ -1,15 +1,15 @@
 <?php
 
-namespace SWamp\Client\Roles;
+namespace Octamp\Client\Roles;
 
-use SWamp\Client\Peer;
-use SWamp\Client\Promise\CancellablePromiseInterface;
-use SWamp\Client\Promise\Deferred;
-use SWamp\Client\Promise\ProgressablePromiseInterface;
-use SWamp\Client\Promise\ProgressPromise;
-use SWamp\Client\Promise\PromiseInterface;
-use SWamp\Client\Result;
-use SWamp\Client\Session;
+use Octamp\Client\Peer;
+use Octamp\Client\Promise\CancellablePromiseInterface;
+use Octamp\Client\Promise\Deferred;
+use Octamp\Client\Promise\ProgressablePromiseInterface;
+use Octamp\Client\Promise\ProgressPromise;
+use Octamp\Client\Promise\PromiseInterface;
+use Octamp\Client\Result;
+use Octamp\Client\Session;
 use Thruway\Common\Utils;
 use Thruway\Message\ErrorMessage;
 use Thruway\Message\InterruptMessage;

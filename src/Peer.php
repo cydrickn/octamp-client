@@ -1,13 +1,13 @@
 <?php
 
-namespace SWamp\Client;
+namespace Octamp\Client;
 
 use Co\Http\Client as SwooleClient;
-use SWamp\Client\Roles\AbstractRole;
-use SWamp\Client\Roles\Callee;
-use SWamp\Client\Roles\Caller;
-use SWamp\Client\Roles\Publisher;
-use SWamp\Client\Roles\Subscriber;
+use Octamp\Client\Roles\AbstractRole;
+use Octamp\Client\Roles\Callee;
+use Octamp\Client\Roles\Caller;
+use Octamp\Client\Roles\Publisher;
+use Octamp\Client\Roles\Subscriber;
 use Swoole\Coroutine;
 use Swoole\WebSocket\Frame;
 use Thruway\Message\AbortMessage;
@@ -73,7 +73,7 @@ class Peer
         });
     }
 
-    protected function startSession()
+    protected function startSession(): void
     {
         $this->roles['publisher'] = new Publisher();
         $this->roles['subscriber'] = new Subscriber();

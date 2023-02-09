@@ -1,8 +1,8 @@
 <?php
 
-namespace SWamp\Client\Roles;
+namespace Octamp\Client\Roles;
 
-use SWamp\Client\Session;
+use Octamp\Client\Session;
 use Thruway\Message\Message;
 
 abstract class AbstractRole

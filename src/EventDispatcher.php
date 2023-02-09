@@ -1,6 +1,6 @@
 <?php
 
-namespace SWamp\Client;
+namespace Octamp\Client;
 
 use Swoole\Coroutine;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace SWamp\Client\Auth;
+namespace Octamp\Client\Auth;
 
 use Thruway\Message\ChallengeMessage;
 use Thruway\Message\AuthenticateMessage;

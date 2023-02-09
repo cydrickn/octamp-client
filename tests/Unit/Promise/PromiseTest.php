@@ -1,11 +1,11 @@
 <?php
 
-namespace SWamp\Client\Tests\Unit\Auth;
+namespace Octamp\Client\Tests\Unit\Auth;
 
 use Co\Channel;
-use SWamp\Client\Promise\Promise;
-use SWamp\Client\Tests\AssertCoroutine;
-use SWamp\Client\Tests\Unit\TestCase;
+use Octamp\Client\Promise\Promise;
+use Octamp\Client\Tests\AssertCoroutine;
+use Octamp\Client\Tests\Unit\TestCase;
 use Swoole\Coroutine;
 use Swoole\Event;
 use Swoole\Timer;
@@ -16,11 +16,11 @@ class PromiseTest extends TestCase
     {
         $assert = new AssertCoroutine();
         $promise = new Promise(function ($resolve) {
-            $resolve('hello swamp');
+            $resolve('hello octamp');
         });
         $promise->then();
         $promise->then(function ($data) use (&$assert) {
-            $assert->add([$this, 'assertSame'], 'hello swamp', $data);
+            $assert->add([$this, 'assertSame'], 'hello octamp', $data);
         });
 
         $assert->assert();
@@ -31,11 +31,11 @@ class PromiseTest extends TestCase
         $assert = new AssertCoroutine();
 
         $promise = new Promise(function ($resolve, $reject) {
-            $reject('hello swamp');
+            $reject('hello octamp');
         });
         $promise->then(function ()  {
         }, function ($data) use (&$assert) {
-            $assert->add([$this, 'assertSame'], 'hello swamp', $data);
+            $assert->add([$this, 'assertSame'], 'hello octamp', $data);
         });
 
         $assert->assert();
@@ -46,10 +46,10 @@ class PromiseTest extends TestCase
         $assert = new AssertCoroutine();
 
         $promise = new Promise(function ($resolve, $reject) {
-            $reject('hello swamp');
+            $reject('hello octamp');
         });
         $promise->catch(function ($data) use (&$assert) {
-            $assert->add([$this, 'assertSame'], 'hello swamp', $data);
+            $assert->add([$this, 'assertSame'], 'hello octamp', $data);
         });
 
         $assert->assert();
@@ -109,10 +109,10 @@ class PromiseTest extends TestCase
     {
         $promise = new Promise(function ($resolve) {
             usleep(100);
-            $resolve('hello swamp');
+            $resolve('hello octamp');
         });
 
         $result = $promise->wait();
-        $this->assertSame('hello swamp', $result);
+        $this->assertSame('hello octamp', $result);
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
-namespace SWamp\Client\Tests\Unit\Auth;
+namespace Octamp\Client\Tests\Unit\Auth;
 
-use SWamp\Client\Auth\WampcraAuthenticator;
-use SWamp\Client\Tests\Unit\TestCase;
+use Octamp\Client\Auth\WampcraAuthenticator;
+use Octamp\Client\Tests\Unit\TestCase;
 use Thruway\Message\AuthenticateMessage;
 use Thruway\Message\ChallengeMessage;
 

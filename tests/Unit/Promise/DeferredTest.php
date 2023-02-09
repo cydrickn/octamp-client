@@ -1,13 +1,13 @@
 <?php
 
-namespace SWamp\Client\Tests\Unit\Auth;
+namespace Octamp\Client\Tests\Unit\Auth;
 
 use Co\Scheduler;
 use Co\WaitGroup;
-use SWamp\Client\Promise\Deferred;
-use SWamp\Client\Promise\ProgressablePromiseInterface;
-use SWamp\Client\Tests\AssertCoroutine;
-use SWamp\Client\Tests\Unit\TestCase;
+use Octamp\Client\Promise\Deferred;
+use Octamp\Client\Promise\ProgressablePromiseInterface;
+use Octamp\Client\Tests\AssertCoroutine;
+use Octamp\Client\Tests\Unit\TestCase;
 use Swoole\Coroutine;
 
 class DeferredTest extends TestCase
@@ -18,10 +18,10 @@ class DeferredTest extends TestCase
         $this->assertInstanceOf(ProgressablePromiseInterface::class, $deferred->promise());
 
         $promise = $deferred->promise();
-        $deferred->resolve('hello swamp');
+        $deferred->resolve('hello Octamp');
         $result = $promise->wait();
 
-        $this->assertSame('hello swamp', $result);
+        $this->assertSame('hello Octamp', $result);
     }
 
     public function testReject()
@@ -30,10 +30,10 @@ class DeferredTest extends TestCase
         $this->assertInstanceOf(ProgressablePromiseInterface::class, $deferred->promise());
 
         $promise = $deferred->promise();
-        $deferred->reject('hello swamp');
+        $deferred->reject('hello Octamp');
         $result = $promise->wait();
 
-        $this->assertSame('hello swamp', $result);
+        $this->assertSame('hello Octamp', $result);
     }
 
     public function testProgress()

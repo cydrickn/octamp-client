@@ -1,6 +1,6 @@
 <?php
 
-namespace SWamp\Client\Tests\Unit;
+namespace Octamp\Client\Tests\Unit;
 
 use PHPUnit\Framework\TestCase as BaseTestCase;
 use Swoole\Event;

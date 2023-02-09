@@ -1,8 +1,8 @@
 <?php
 
-namespace SWamp\Client;
+namespace Octamp\Client;
 
-use SWamp\Client\Promise\PromiseInterface;
+use Octamp\Client\Promise\PromiseInterface;
 use Thruway\Message\Message;
 
 class Session

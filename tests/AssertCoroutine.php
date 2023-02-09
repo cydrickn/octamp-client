@@ -1,6 +1,6 @@
 <?php
 
-namespace SWamp\Client\Tests;
+namespace Octamp\Client\Tests;
 
 class AssertCoroutine
 {

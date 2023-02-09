@@ -1,9 +1,9 @@
 <?php
 
-namespace SWamp\Client\Roles;
+namespace Octamp\Client\Roles;
 
-use SWamp\Client\Promise\Deferred;
-use SWamp\Client\Session;
+use Octamp\Client\Promise\Deferred;
+use Octamp\Client\Session;
 use Thruway\Common\Utils;
 use Thruway\Message\ErrorMessage;
 use Thruway\Message\EventMessage;

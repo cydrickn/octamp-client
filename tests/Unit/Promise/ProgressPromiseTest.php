@@ -1,11 +1,11 @@
 <?php
 
-namespace SWamp\Client\Tests\Unit\Auth;
+namespace Octamp\Client\Tests\Unit\Auth;
 
-use SWamp\Client\Promise\ProgressPromise;
-use SWamp\Client\Promise\Promise;
-use SWamp\Client\Tests\AssertCoroutine;
-use SWamp\Client\Tests\Unit\TestCase;
+use Octamp\Client\Promise\ProgressPromise;
+use Octamp\Client\Promise\Promise;
+use Octamp\Client\Tests\AssertCoroutine;
+use Octamp\Client\Tests\Unit\TestCase;
 
 class ProgressPromiseTest extends TestCase
 {

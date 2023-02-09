@@ -1,6 +1,6 @@
 <?php
 
-namespace SWamp\Client\Promise;
+namespace Octamp\Client\Promise;
 
 interface CancellablePromiseInterface extends PromiseInterface
 {

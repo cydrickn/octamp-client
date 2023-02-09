@@ -1,5 +1,6 @@
 composer.phar
 /vendor/
+/build/
 /examples/
 .phpunit.result.cache
 .phpunit.cache

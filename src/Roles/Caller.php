@@ -1,12 +1,12 @@
 <?php
 
-namespace SWamp\Client\Roles;
+namespace Octamp\Client\Roles;
 
-use SWamp\Client\Promise\Deferred;
-use SWamp\Client\Promise\ProgressablePromiseInterface;
-use SWamp\Client\Promise\ProgressPromise;
-use SWamp\Client\Result;
-use SWamp\Client\Session;
+use Octamp\Client\Promise\Deferred;
+use Octamp\Client\Promise\ProgressablePromiseInterface;
+use Octamp\Client\Promise\ProgressPromise;
+use Octamp\Client\Result;
+use Octamp\Client\Session;
 use Thruway\Common\Utils;
 use Thruway\Message\CallMessage;
 use Thruway\Message\ErrorMessage;

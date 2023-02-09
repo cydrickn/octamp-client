@@ -1,15 +1,15 @@
 <?php
 
-namespace SWamp\Client\Tests\Unit;
+namespace Octamp\Client\Tests\Unit;
 
-use SWamp\Client\Peer;
-use SWamp\Client\Promise\ProgressablePromiseInterface;
-use SWamp\Client\Promise\PromiseInterface;
-use SWamp\Client\Roles\Callee;
-use SWamp\Client\Roles\Caller;
-use SWamp\Client\Roles\Publisher;
-use SWamp\Client\Roles\Subscriber;
-use SWamp\Client\Session;
+use Octamp\Client\Peer;
+use Octamp\Client\Promise\ProgressablePromiseInterface;
+use Octamp\Client\Promise\PromiseInterface;
+use Octamp\Client\Roles\Callee;
+use Octamp\Client\Roles\Caller;
+use Octamp\Client\Roles\Publisher;
+use Octamp\Client\Roles\Subscriber;
+use Octamp\Client\Session;
 use Thruway\Message\Message;
 
 class SessionTest extends TestCase
