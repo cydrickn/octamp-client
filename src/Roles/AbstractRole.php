@@ -11,8 +11,5 @@ abstract class AbstractRole
 
     abstract public function handlesMessage(Message $msg): bool;
 
-    public function getFeatures(): \stdClass
-    {
-        return new \stdClass();
-    }
+    abstract public function getFeatures(): \stdClass;
 }

@@ -30,4 +30,24 @@ class EventDispatcher
 
         $this->events[$event][] = $callback;
     }
+
+    public function off(string $event, callable $callback): void
+    {
+        $events = $this->getEvents($event);
+        if (empty($events)) {
+            return;
+        }
+
+        $index = array_search($callback, $events);
+        array_splice($this->events[$event], $index, 1);
+    }
+
+    public function getEvents(?string $name = null): array
+    {
+        if ($name === null) {
+            return $this->events;
+        }
+
+        return $this->events[$name] ?? [];
+    }
 }
