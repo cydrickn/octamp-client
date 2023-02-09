@@ -6,8 +6,7 @@
         "psr-4": {
             "Octamp\\Client\\": "src/",
             "Octamp\\Client\\Tests\\": "tests/"
-        },
-        "files": ["src/helpers.php"]
+        }
     },
     "authors": [
         {

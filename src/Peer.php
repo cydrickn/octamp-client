@@ -22,7 +22,7 @@ use Thruway\Serializer\SerializerInterface;
 
 class Peer
 {
-    protected SwooleClient $client;
+    protected ?SwooleClient $client;
     protected Session $session;
     protected EventDispatcher $eventDispatcher;
     protected SerializerInterface $serializer;
@@ -41,35 +41,41 @@ class Peer
         $this->path = $this->option['path'] ?? '/';
         $this->eventDispatcher = new EventDispatcher();
         $this->serializer = new JsonSerializer();
+        $this->client = null;
+    }
+
+    public function setClient(SwooleClient $client): void
+    {
+        $this->client = $client;
     }
 
     public function open(): void
     {
-        Coroutine\run(function () {
-            $this->client = new SwooleClient($this->host, $this->port);
+        if ($this->client === null) {
+            $this->client = new SwooleClient($this->host, $this->port); // @codeCoverageIgnore
+        }
 
-            $this->client->setHeaders([
-                "User-Agent" => 'Chrome/49.0.2587.3',
-                'Accept' => 'text/html,application/xhtml+xml,application/xml',
-                'Accept-Encoding' => 'gzip, deflate, br',
-                'Sec-WebSocket-Protocol' => 'wamp.2.json, wamp.2.msgpack'
-            ]);
+        $this->client->setHeaders([
+            "User-Agent" => 'Chrome/49.0.2587.3',
+            'Accept' => 'text/html,application/xhtml+xml,application/xml',
+            'Accept-Encoding' => 'gzip, deflate, br',
+            'Sec-WebSocket-Protocol' => 'wamp.2.json, wamp.2.msgpack'
+        ]);
 
-            $upgraded = $this->client->upgrade($this->path);
-            Coroutine\go(function () {
-                while (true) {
-                    $data = $this->client->recv();
-                    Coroutine\go(function ($data) {
-                        $this->onMessage($data);
-                    }, $data);
-                }
-            });
+        $upgraded = $this->client->upgrade($this->path);
+        Coroutine\go(function () use ($upgraded)  {
+            if ($upgraded) {
+                $this->startSession();
+            }
+        });
 
-            Coroutine\go(function () use ($upgraded)  {
-                if ($upgraded) {
-                    $this->startSession();
-                }
-            });
+        Coroutine\go(function () {
+            while ($this->client->connected) {
+                $data = $this->client->recv();
+                Coroutine\go(function ($data) {
+                    $this->onMessage($data);
+                }, $data);
+            }
         });
     }
 
@@ -149,6 +155,7 @@ class Peer
 
     public function close(string $reason): void
     {
+        $this->client->close();
     }
 
     public function sendMessage(Message $message)
