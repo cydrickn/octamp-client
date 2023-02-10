@@ -26,6 +26,9 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-php-
 
+    - name: Install PCov
+      run: pecl install pcov && docker-php-ext-enable pcov
+
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress
 
@@ -33,4 +36,10 @@ jobs:
     # Docs: https://getcomposer.org/doc/articles/scripts.md
 
     - name: Run test suite
-      run: composer run-script test -- --no-coverage
+      run: composer run-script test -- --coverage-clover coverage.xml
+
+    - name: Codecov
+      uses: codecov/codecov-action@v3.1.1
+      with:
+        files: ./coverage.xml
+
