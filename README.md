@@ -3,6 +3,7 @@
 
 [![Packagist PHP Version](https://img.shields.io/packagist/dependency-v/octamp/client/php?style=flat-square)](https://packagist.org/packages/octamp/client)
 [![License](https://img.shields.io/packagist/l/octamp/client?style=flat-square)](/LICENSE)
+[![Test](https://github.com/cydrickn/octamp-client/actions/workflows/test.yml/badge.svg?branch=main)](https://github.com/cydrickn/octamp-client/actions/workflows/test.yml)
 
 Octamp Client is an open source client for [WAMP (Web Application Messaging Protocol)](https://wamp-proto.org/), for PHP.
 
