@@ -36,12 +36,12 @@ jobs:
     # Docs: https://getcomposer.org/doc/articles/scripts.md
 
     - name: Run test suite
-      run: composer run-script test -- --coverage-clover coverage.xml
+      run: composer run-script test -- --coverage-clover ./coverage.xml
 
     - name: Codecov
       uses: codecov/codecov-action@v3
       with:
-        token: ${{ secrets.CODE_COV_TOKEN }}
+        token: ${{ secrets.CODECOV_TOKEN }}
         files: ./coverage.xml
         verbose: true
 
