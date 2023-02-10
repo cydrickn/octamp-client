@@ -17,6 +17,9 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Install git
+      run: apt-get update && apt-get -y install git
+
     - name: Cache Composer packages
       id: composer-cache
       uses: actions/cache@v3
