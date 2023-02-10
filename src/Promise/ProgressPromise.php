@@ -20,7 +20,7 @@ class ProgressPromise extends Promise implements ProgressablePromiseInterface
     }
     public function then(?callable $onFulfilled = null, ?callable $onRejected = null, ?callable $onProgress = null): ProgressablePromiseInterface
     {
-        if ($onProgress !== null) {
+        if (is_callable($onProgress)) {
             $this->handlers[] = $onProgress;
         }
         return parent::then($onFulfilled, $onRejected);

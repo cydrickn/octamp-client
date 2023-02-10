@@ -57,7 +57,7 @@ class Callee extends AbstractRole
         $features->shared_registration = true;
 //        $features->call_timeout = true;
 //        $features->call_canceling = true;
-        $features->progressive_call_results = true;
+        // $features->progressive_call_results = true;
         $features->registration_revocation = true;
 
         return $features;
@@ -72,7 +72,7 @@ class Callee extends AbstractRole
         } elseif ($msg instanceof InvocationMessage) {
             $this->processInvocation($session, $msg);
         } elseif ($msg instanceof InterruptMessage) {
-            $this->processInterrupt($session, $msg);
+//            $this->processInterrupt($session, $msg);
         } elseif ($msg instanceof ErrorMessage) {
             $this->processError($session, $msg);
         } else {
@@ -89,7 +89,7 @@ class Callee extends AbstractRole
 
                 if ($this->registrations[$key]['futureResult'] instanceof Deferred) {
                     $futureResult = $this->registrations[$key]['futureResult'];
-                    $futureResult->resolve();
+                    $futureResult->resolve($msg);
                 }
 
                 return;
@@ -157,15 +157,15 @@ class Callee extends AbstractRole
                         $results = $registration['callback']($msg->getArguments(), $msg->getArgumentsKw(), $msg->getDetails());
 
                         if ($results instanceof PromiseInterface) {
-                            if ($results instanceof CancellablePromiseInterface) {
-                                $this->invocationCanceller[$msg->getRequestId()] = function () use ($results) {
-                                    $results->cancel();
-                                };
-                                $results = $results->then(function ($result) use ($msg) {
-                                    unset($this->invocationCanceller[$msg->getRequestId()]);
-                                    return $result;
-                                });
-                            }
+                            // if ($results instanceof CancellablePromiseInterface) {
+                            //    $this->invocationCanceller[$msg->getRequestId()] = function () use ($results) {
+                            //        $results->cancel();
+                            //    };
+                            //    $results = $results->then(function ($result) use ($msg) {
+                            //        unset($this->invocationCanceller[$msg->getRequestId()]);
+                            //        return $result;
+                            //    });
+                            // }
                             $this->processResultAsPromise($results, $msg, $session, $registration);
                         } else {
                             $this->processResultAsArray($results, $msg, $session);
@@ -182,14 +182,14 @@ class Callee extends AbstractRole
 
     }
 
-    private function processInterrupt(Session $session, InterruptMessage $msg)
-    {
-        if (isset($this->invocationCanceller[$msg->getRequestId()])) {
-            $callable = $this->invocationCanceller[$msg->getRequestId()];
-            unset($this->invocationCanceller[$msg->getRequestId()]);
-            $callable();
-        }
-    }
+//    private function processInterrupt(Session $session, InterruptMessage $msg)
+//    {
+//        if (isset($this->invocationCanceller[$msg->getRequestId()])) {
+//            $callable = $this->invocationCanceller[$msg->getRequestId()];
+//            unset($this->invocationCanceller[$msg->getRequestId()]);
+//            $callable();
+//        }
+//    }
 
     private function processResultAsPromise(PromiseInterface $promise, InvocationMessage $msg, Session $session, $registration)
     {
@@ -201,7 +201,7 @@ class Callee extends AbstractRole
                         $promiseResults->getArguments(), $promiseResults->getArgumentsKw());
                 } else {
                     $promiseResults = is_array($promiseResults) ? $promiseResults : [$promiseResults];
-                    $promiseResults = !$this::is_list($promiseResults) ? [$promiseResults] : $promiseResults;
+                    $promiseResults = !$this::isList($promiseResults) ? [$promiseResults] : $promiseResults;
 
                     $yieldMsg = new YieldMessage($msg->getRequestId(), $options, $promiseResults);
                 }
@@ -218,23 +218,25 @@ class Callee extends AbstractRole
                 $errorMsg->setErrorURI($registration['procedure_name'] . '.error');
 
                 $session->sendMessage($errorMsg);
-            },
-            function ($results) use ($msg, $session, $registration) {
-                $options = new \stdClass();
-                $options->progress = true;
-                if ($results instanceof Result) {
-                    $yieldMsg = new YieldMessage($msg->getRequestId(), $options, $results->getArguments(),
-                        $results->getArgumentsKw());
-                } else {
-                    $results = is_array($results) ? $results : [$results];
-                    $results = !$this::is_list($results) ? [$results] : $results;
-
-                    $yieldMsg = new YieldMessage($msg->getRequestId(), $options, $results);
-                }
-
-                $session->sendMessage($yieldMsg);
             }
         );
+        // if ($promise instanceof ProgressablePromiseInterface) {
+        //    $promise->progress(function ($results) use ($msg, $session, $registration) {
+        //        $options = new \stdClass();
+        //        $options->progress = true;
+        //        if ($results instanceof Result) {
+        //            $yieldMsg = new YieldMessage($msg->getRequestId(), $options, $results->getArguments(),
+        //                $results->getArgumentsKw());
+        //        } else {
+        //            $results = is_array($results) ? $results : [$results];
+        //            $results = !$this::isList($results) ? [$results] : $results;
+        //
+        //            $yieldMsg = new YieldMessage($msg->getRequestId(), $options, $results);
+        //        }
+
+        //        $session->sendMessage($yieldMsg);
+        //    });
+        //}
     }
 
     private function processResultAsArray($results, InvocationMessage $msg, Session $session)
@@ -245,7 +247,7 @@ class Callee extends AbstractRole
                 $results->getArgumentsKw());
         } else {
             $results = is_array($results) ? $results : [$results];
-            $results = !$this::is_list($results) ? [$results] : $results;
+            $results = !$this::isList($results) ? [$results] : $results;
 
             $yieldMsg = new YieldMessage($msg->getRequestId(), $options, $results);
         }
@@ -381,7 +383,7 @@ class Callee extends AbstractRole
 //            Logger::error($this, 'Registration ID is not set while attempting to unregister '.$Uri);
 
             // reject the pending registration
-            $registration['futureResult']->reject();
+            $registration['futureResult']->reject('Registration ID is not set while attempting to unregister ' . $Uri);
 
             // TODO: need to figure out what to do in this off chance
             // We should still probably return a promise here that just rejects
@@ -389,9 +391,7 @@ class Callee extends AbstractRole
             // the router may have a "REGISTERED" in transit and may still think that is
             // good to go - so maybe still send the unregister?
         }
-
         $requestId = Utils::getUniqueId();
-
         // save the request id so we can find this in the registration
         // list to call the deferred and remove it from the list
         $registration['unregister_request_id'] = $requestId;
@@ -404,16 +404,10 @@ class Callee extends AbstractRole
         return $futureResult->promise();
     }
 
-    /**
-     * This belongs somewhere else I am thinking
-     *
-     * @param array $array
-     * @return boolean
-     */
-    public static function is_list($array)
+    protected static function isList($array): bool
     {
         if (!is_array($array)) {
-            return false;
+            return false; // @codeCoverageIgnore
         }
 
         // Keys of the array

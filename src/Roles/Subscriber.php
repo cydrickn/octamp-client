@@ -40,7 +40,7 @@ class Subscriber extends AbstractRole
         if ($msg instanceof SubscribedMessage) {
             $this->processSubscribed($session, $msg);
         } elseif ($msg instanceof UnsubscribedMessage) {
-            $this->processUnsubscribed($session, $msg);
+            // $this->processUnsubscribed($session, $msg);
         } elseif ($msg instanceof EventMessage) {
             $this->processEvent($session, $msg);
         } elseif ($msg instanceof ErrorMessage) {
@@ -56,9 +56,9 @@ class Subscriber extends AbstractRole
             case Message::MSG_SUBSCRIBE:
                 $this->processSubscribeError($session, $msg);
                 break;
-            case Message::MSG_UNSUBSCRIBE:
+            // case Message::MSG_UNSUBSCRIBE:
                 // TODO
-                break;
+             //   break;
             default:
                 // Logger::critical($this, 'Unhandled error');
         }
@@ -88,20 +88,21 @@ class Subscriber extends AbstractRole
         }
     }
 
-    protected function processUnsubscribed(Session $session, UnsubscribedMessage $msg)
-    {
-        foreach ($this->subscriptions as $key => $subscription) {
-            if (isset($subscription['unsubscribed_request_id']) && $subscription['unsubscribed_request_id'] === $msg->getRequestId()) {
-                /* @var $deferred Deferred */
-                $deferred = $subscription['unsubscribed_deferred'];
-                $deferred->resolve();
-
-                unset($this->subscriptions[$key]);
-                return;
-            }
-        }
+//    protected function processUnsubscribed(Session $session, UnsubscribedMessage $msg)
+//    {
+//        foreach ($this->subscriptions as $key => $subscription) {
+//            if (isset($subscription['unsubscribed_request_id']) && $subscription['unsubscribed_request_id'] === $msg->getRequestId()) {
+//                /* @var $deferred Deferred */
+//                $deferred = $subscription['unsubscribed_deferred'];
+//                $deferred->resolve(true);
+//
+//                unset($this->subscriptions[$key]);
+//                return;
+//            }
+//        }
+//
 //        $this->logger->error("---Got an Unsubscribed Message, but couldn't find corresponding request.\n");
-    }
+//    }
 
     protected function processEvent(Session $session, EventMessage $msg)
     {

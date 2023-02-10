@@ -7,7 +7,7 @@ class Result
     public readonly array $args;
     public readonly object $kwargs;
 
-    public function __construct(array $args, array|object $kwargs)
+    public function __construct(array $args = [], array|object $kwargs = [])
     {
         $this->args = $args;
         $this->kwargs = (object) $kwargs;

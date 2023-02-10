@@ -81,3 +81,5 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 
 - Call Cancel
 - Call Timeout
+- Unsubscribe
+- Progress
