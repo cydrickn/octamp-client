@@ -1,4 +1,9 @@
 # Octamp Client
+
+
+[![Packagist PHP Version](https://img.shields.io/packagist/dependency-v/octamp/client/php?style=flat-square)](https://packagist.org/packages/octamp/client)
+[![License](https://img.shields.io/packagist/l/octamp/client?style=flat-square)](/LICENSE)
+
 Octamp Client is an open source client for [WAMP (Web Application Messaging Protocol)](https://wamp-proto.org/), for PHP.
 
 Octamp Client uses [Open Swoole](https://openswoole.com/docs), is a high-performance network framework based on an event-driven, asynchronous, non-blocking I/O coroutine programming model for PHP.

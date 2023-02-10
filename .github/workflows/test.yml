@@ -1,4 +1,4 @@
-name: PHP Composer
+name: Test
 
 on:
   push:
@@ -11,8 +11,8 @@ permissions:
 
 jobs:
   build:
-
-    runs-on: openswoole/swoole:4.11.1-php8.1
+    runs-on: ubuntu-latest
+    container: openswoole/swoole:4.11.1-php8.1
 
     steps:
     - uses: actions/checkout@v3
