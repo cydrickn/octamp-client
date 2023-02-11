@@ -89,4 +89,12 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 - Call Cancel
 - Call Timeout
 - Unsubscribe
-- Progress
+- RPC Progress Call
+- Auto Reconnect
+- Subprotocol Handling
+- Heartbeat
+- Custom Error Handling
+- TLS connection
+- Session Logging
+- Session Prefix
+- Pattern Base Subscription / Registration

@@ -417,4 +417,9 @@ class Callee extends AbstractRole
         // not be associative (e.g. the keys array looked like {0:0, 1:1...}).
         return array_keys($keys) === $keys;
     }
+
+    public function getRegistrations(): array
+    {
+        return $this->registrations;
+    }
 }

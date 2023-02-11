@@ -15,11 +15,13 @@ class Session
 
     protected ?int $sessionId;
     protected int $state;
+    protected object $details;
 
     public function __construct(protected Peer $peer)
     {
         $this->state = self::STATE_UNKNOWN;
         $this->sessionId = null;
+        $this->details = (object) [];
     }
 
     public function subscribe(string $topicName, callable $callback, array|object $options = []): PromiseInterface
@@ -57,6 +59,11 @@ class Session
         return $this->sessionId;
     }
 
+    public function getId(): ?int
+    {
+        return $this->sessionId;
+    }
+
     public function setState(int $state): void
     {
         $this->state = $state;
@@ -70,5 +77,30 @@ class Session
     public function sendMessage(Message $message): void
     {
         $this->peer->sendMessage($message);
+    }
+
+    public function setDetails(array|object $details): void
+    {
+        $this->details = (object) $details;
+    }
+
+    public function getRealm(): ?string
+    {
+        return $this->details->realm ?? null;
+    }
+
+    public function getFeatures(): ?object
+    {
+        return $this->details->roles ?? (object) [];
+    }
+
+    public function getSubscriptions(): array
+    {
+        return $this->peer->getSubscriber()->getSubscriptions();
+    }
+
+    public function getRegistrations(): array
+    {
+        return $this->peer->getCallee()->getRegistrations();
     }
 }

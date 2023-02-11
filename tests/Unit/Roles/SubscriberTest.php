@@ -144,4 +144,27 @@ class SubscriberTest extends TestCase
 
         $assert->assertWait();
     }
+
+    public function testGetSubscriptions()
+    {
+        $requestId = null;
+        $session = \Mockery::mock(Session::class);
+        $session->shouldReceive('sendMessage')
+            ->with(\Mockery::on(function ($message) use (&$requestId) {
+                if (!($message instanceof SubscribeMessage)) {
+                    return false;
+                }
+                $requestId = $message->getRequestId();
+
+                return true;
+            }))
+            ->once();
+
+        $role = new Subscriber();
+        $role->subscribe($session, 'octamp.test', function () {});
+
+        $subcriptions = $role->getSubscriptions();
+        $this->assertCount(1, $subcriptions);
+        $this->assertSame($requestId, $subcriptions[0]['request_id']);
+    }
 }

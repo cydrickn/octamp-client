@@ -505,4 +505,26 @@ class CalleeTest extends TestCase
         $message = new SubscribedMessage(1, (object) [], 'octamp.test');
         $role->onMessage($session, $message);
     }
+
+    public function testGetRegistrations()
+    {
+        $session = \Mockery::mock(Session::class);
+        $session->shouldReceive('sendMessage')
+            ->with(\Mockery::on(function ($message) use (&$requestId) {
+                if (!($message instanceof RegisterMessage)) {
+                    return false;
+                }
+                $requestId = $message->getRequestId();
+
+                return true;
+            }))
+            ->once();
+
+        $role = new Callee();
+        $role->register($session, 'octamp.test', function () {});
+
+        $registrations = $role->getRegistrations();
+        $this->assertCount(1, $registrations);
+        $this->assertSame($requestId, $registrations[0]['request_id']);
+    }
 }

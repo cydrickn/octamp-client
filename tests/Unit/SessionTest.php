@@ -3,6 +3,7 @@
 namespace Octamp\Client\Tests\Unit;
 
 use Octamp\Client\Peer;
+use Octamp\Client\Promise\Deferred;
 use Octamp\Client\Promise\ProgressablePromiseInterface;
 use Octamp\Client\Promise\PromiseInterface;
 use Octamp\Client\Roles\Callee;
@@ -30,6 +31,15 @@ class SessionTest extends TestCase
 
         $session->setSessionId(100);
         $this->assertSame(100, $session->getSessionId());
+    }
+
+    public function testGetId()
+    {
+        $peer = \Mockery::mock(Peer::class);
+        $session = new Session($peer);
+
+        $session->setSessionId(100);
+        $this->assertSame(100, $session->getId());
     }
 
     public function testSendMessage()
@@ -142,5 +152,73 @@ class SessionTest extends TestCase
 
         $result = $session->unregister('topic');
         $this->assertInstanceOf(ProgressablePromiseInterface::class, $result);
+    }
+
+    public function testGetRealm()
+    {
+        $peer = \Mockery::mock(Peer::class);
+        $session = new Session($peer);
+
+        $session->setDetails(['realm' => 'realm1']);
+        $this->assertSame('realm1', $session->getRealm());
+    }
+
+    public function testGetFeatures()
+    {
+        $peer = \Mockery::mock(Peer::class);
+        $session = new Session($peer);
+
+        $jsonRole = '{"broker":{"features":{"publisher_identification":true,"pattern_based_subscription":true,"session_meta_api":true,"subscription_meta_api":true,"subscriber_blackwhite_listing":true,"publisher_exclusion":true,"subscription_revocation":true,"payload_transparency":true,"payload_encryption_cryptobox":true,"event_retention":true}},"dealer":{"features":{"caller_identification":true,"pattern_based_registration":true,"session_meta_api":true,"registration_meta_api":true,"shared_registration":true,"call_canceling":true,"progressive_call_results":true,"registration_revocation":true,"payload_transparency":true,"testament_meta_api":true,"payload_encryption_cryptobox":true}}}';
+
+        $session->setDetails(['realm' => 'realm1', 'roles' => (object) json_decode($jsonRole, true)]);
+        $this->assertEquals((object) json_decode($jsonRole, true), $session->getFeatures());
+    }
+
+    public function testGetSubscriptions()
+    {
+        $peer = \Mockery::mock(Peer::class);
+        $subscriber = \Mockery::mock(Subscriber::class);
+        $session = new Session($peer);
+
+        $peer->shouldReceive('getSubscriber')
+            ->once()
+            ->andReturn($subscriber);
+        $subscriptions = [[
+            'topic_name' => 'test',
+            'callback' => function () {},
+            'request_id' => 1,
+            'options' => [],
+            'deferred' => new Deferred(),
+        ]];
+        $subscriber->shouldReceive('getSubscriptions')
+            ->once()
+            ->andReturn($subscriptions);
+
+
+        $this->assertSame($subscriptions, $session->getSubscriptions());
+    }
+
+    public function testGetRegistrations()
+    {
+        $peer = \Mockery::mock(Peer::class);
+        $callee = \Mockery::mock(Callee::class);
+        $session = new Session($peer);
+
+        $peer->shouldReceive('getCallee')
+            ->once()
+            ->andReturn($callee);
+        $registrations = [[
+            'procedure_name' => 'test',
+            'callback' => function () {},
+            'request_id' => 1,
+            'options' => [],
+            'futureResult' => new Deferred(),
+        ]];
+        $callee->shouldReceive('getRegistrations')
+            ->once()
+            ->andReturn($registrations);
+
+
+        $this->assertSame($registrations, $session->getRegistrations());
     }
 }

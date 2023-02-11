@@ -57,8 +57,8 @@ class Subscriber extends AbstractRole
                 $this->processSubscribeError($session, $msg);
                 break;
             // case Message::MSG_UNSUBSCRIBE:
-                // TODO
-             //   break;
+            // TODO
+            //   break;
             default:
                 // Logger::critical($this, 'Unhandled error');
         }
@@ -141,15 +141,15 @@ class Subscriber extends AbstractRole
     public function subscribe(Session $session, $topicName, callable $callback, array|object $options = [])
     {
         $requestId = Utils::getUniqueId();
-        $options   = (object) $options;
-        $deferred  = new Deferred();
+        $options = (object)$options;
+        $deferred = new Deferred();
 
         $subscription = [
             'topic_name' => $topicName,
-            'callback'   => $callback,
+            'callback' => $callback,
             'request_id' => $requestId,
-            'options'    => $options,
-            'deferred'   => $deferred
+            'options' => $options,
+            'deferred' => $deferred,
         ];
 
         $this->subscriptions[] = $subscription;
@@ -158,5 +158,10 @@ class Subscriber extends AbstractRole
         $session->sendMessage($subscribeMsg);
 
         return $deferred->promise();
+    }
+
+    public function getSubscriptions(): array
+    {
+        return $this->subscriptions;
     }
 }

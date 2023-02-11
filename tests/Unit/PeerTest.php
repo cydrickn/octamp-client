@@ -225,6 +225,7 @@ class PeerTest extends TestCase
             usleep(1);
         }
         $assert->assert();
+        $this->assertSame(Session::STATE_CHALLENGE_SENT, $peer->getSession()->getState());
     }
 
     public function testProcessOthers()
@@ -309,5 +310,32 @@ class PeerTest extends TestCase
         $peer->close('Test');
 
         $this->assertInstanceOf(Session::class, $result);
+    }
+
+    public function testIsConnected()
+    {
+        $peer = new Peer('localhost', 9000);
+        $client = $this->getClient();
+        $peer->setClient($client);
+        $client->connected = true;
+
+        $this->assertTrue($peer->isConnected());
+        $client->connected = false;
+        $this->assertFalse($peer->isConnected());
+    }
+
+    public function testIsOpen()
+    {
+        $peer = new Peer('localhost', 9000);
+        $client = $this->getClient();
+        $peer->setClient($client);
+
+        $peer->open();
+
+        $this->assertFalse($peer->isOpen());
+        $peer->getSession()->setState(Session::STATE_UP);
+        $this->assertTrue($peer->isOpen());
+
+        $peer->close('test');
     }
 }

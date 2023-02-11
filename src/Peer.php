@@ -22,6 +22,19 @@ use Thruway\Serializer\SerializerInterface;
 
 class Peer
 {
+    protected const DEFAULT_OPTIONS = [
+        'realm' => 'realm1',
+        'path' => '/',
+        // automatic reconnection
+        'max_retries' => 15,
+        'initial_retry_delay' => 1.5,
+        'max_retry_delay' => 300,
+        'retry_delay_growth' => 1.5,
+        'retry_delay_jitter' => 0.1,
+        // heartbeat
+        'autoping_size' => 4,
+    ];
+
     protected ?SwooleClient $client;
     protected Session $session;
     protected EventDispatcher $eventDispatcher;
@@ -29,6 +42,8 @@ class Peer
 
     protected string $realm;
     protected string $path;
+
+    protected array $options = [];
 
     /**
      * @var AbstractRole[] $roles
@@ -141,15 +156,15 @@ class Peer
     {
         $this->session->setSessionId($message->getSessionId());
         $this->session->setState(Session::STATE_UP);
-
-        $this->eventDispatcher->emit('open', $this->session);
+        $this->session->setDetails($message->getDetails());
+        $this->eventDispatcher->emit('open', $this->session, $message);
     }
 
     protected function processChallenge(ChallengeMessage $message): void
     {
         $token = call_user_func($this->onChallenge, $this->session, $message->getAuthMethod(), $message->getDetails());
-
         $this->sendMessage(new AuthenticateMessage($token));
+        $this->session->setState(Session::STATE_CHALLENGE_SENT);
     }
 
     public function processOther(Session $session, Message $message): void
@@ -162,7 +177,7 @@ class Peer
         }
     }
 
-    public function close(string $reason): void
+    public function close(string $reason, string $message = ''): void
     {
         $this->client->close();
     }
@@ -229,5 +244,15 @@ class Peer
     public function hasRole(string $name): bool
     {
         return isset($this->roles[$name]);
+    }
+
+    public function isConnected(): bool
+    {
+        return $this->client->connected;
+    }
+
+    public function isOpen(): bool
+    {
+        return $this->session->getState() === Session::STATE_UP;
     }
 }
