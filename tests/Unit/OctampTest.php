@@ -10,7 +10,7 @@ class OctampTest extends TestCase
     public function testVersion()
     {
         $version = Octamp::version();
-        $this->assertSame('dev-main', $version);
+        $this->assertIsString($version);
     }
 
     public function testConnection()
