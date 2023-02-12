@@ -45,7 +45,7 @@ class Promise implements PromiseInterface
         return self::create(function (callable $resolve, callable $reject) use ($onFulfilled, $onRejected) {
             while ($this->isPending()) {
                 // @codeCoverageIgnoreStart
-                usleep(1);
+                Coroutine::usleep(1);
                 // @codeCoverageIgnoreEnd
             }
             $callable = $this->isFulfilled() ? $onFulfilled : $onRejected;
@@ -69,7 +69,7 @@ class Promise implements PromiseInterface
     final public function wait(): mixed
     {
         while ($this->isPending()) {
-            usleep(1);
+            Coroutine::usleep(1);
         }
 
         return $this->result;
@@ -106,7 +106,7 @@ class Promise implements PromiseInterface
             $value->then($callable, $callable);
             // resolve async locking error
             while (!$resolved) {
-                usleep(1);
+                Coroutine::usleep(1);
             }
         } else {
             $this->result = $value;

@@ -107,7 +107,7 @@ class Subscriber extends AbstractRole
     protected function processEvent(Session $session, EventMessage $msg)
     {
         foreach ($this->subscriptions as $key => $subscription) {
-            usleep(1);
+            Coroutine::usleep(1);
             if ($subscription['subscription_id'] === $msg->getSubscriptionId()) {
                 call_user_func(
                     $subscription['callback'],

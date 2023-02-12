@@ -86,7 +86,7 @@ class Peer
 
         Coroutine\go(function () {
             while ($this->client->connected) {
-                usleep(1);
+                Coroutine::usleep(1);
                 $data = $this->client->recv();
                 Coroutine\go(function ($data) {
                     $this->onMessage($data);
