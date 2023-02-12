@@ -4,6 +4,7 @@ namespace Octamp\Client\Roles;
 
 use Octamp\Client\Promise\Deferred;
 use Octamp\Client\Session;
+use Swoole\Coroutine;
 use Thruway\Common\Utils;
 use Thruway\Message\ErrorMessage;
 use Thruway\Message\EventMessage;
