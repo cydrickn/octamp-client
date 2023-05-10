@@ -10,7 +10,7 @@ class EventDispatcher
 
     public function emit(string $eventName, ...$args): void
     {
-        Coroutine\go(function () use ($eventName, $args) {
+        Coroutine::create(function () use ($eventName, $args) {
             $events = $this->events[$eventName] ?? [];
             if (empty($events)) {
                 return;

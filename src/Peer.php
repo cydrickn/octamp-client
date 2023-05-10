@@ -2,7 +2,7 @@
 
 namespace Octamp\Client;
 
-use Co\Http\Client as SwooleClient;
+use Swoole\Coroutine\Http\Client as SwooleClient;
 use Octamp\Client\Roles\AbstractRole;
 use Octamp\Client\Roles\Callee;
 use Octamp\Client\Roles\Caller;
@@ -78,17 +78,17 @@ class Peer
         ]);
 
         $upgraded = $this->client->upgrade($this->path);
-        Coroutine\go(function () use ($upgraded)  {
+        Coroutine::create(function () use ($upgraded)  {
             if ($upgraded) {
                 $this->startSession();
             }
         });
 
-        Coroutine\go(function () {
+        Coroutine::create(function () {
             while ($this->client->connected) {
                 Coroutine::usleep(1);
                 $data = $this->client->recv();
-                Coroutine\go(function ($data) {
+                Coroutine::create(function ($data) {
                     $this->onMessage($data);
                 }, $data);
             }
@@ -134,9 +134,9 @@ class Peer
         } elseif ($message instanceof WelcomeMessage) {
             $this->processWelcome($message);
         } elseif ($message instanceof AbortMessage) {
-
+            // TODO do abort message
         } elseif ($message instanceof GoodbyeMessage) {
-
+            // TODO do goodby message
         } else {
             $this->processOther($this->session, $message);
         }
