@@ -39,6 +39,7 @@ class Peer
     protected Session $session;
     protected EventDispatcher $eventDispatcher;
     protected SerializerInterface $serializer;
+    protected mixed $onChallenge = null;
 
     protected string $realm;
     protected string $path;

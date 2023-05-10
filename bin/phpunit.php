@@ -2,7 +2,7 @@
 <?php
 
 $status = 0;
-Co\run(function () use (&$status) {
+\Swoole\Coroutine::run(function () use (&$status) {
     global $argc, $argv;
     try {
         require __DIR__ . '/../vendor/bin/phpunit';
