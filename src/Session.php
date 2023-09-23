@@ -17,6 +17,8 @@ class Session
     protected int $state;
     protected object $details;
 
+    protected bool $goodbyeSent = false;
+
     public function __construct(protected Peer $peer)
     {
         $this->state = self::STATE_UNKNOWN;
@@ -102,5 +104,15 @@ class Session
     public function getRegistrations(): array
     {
         return $this->peer->getCallee()->getRegistrations();
+    }
+
+    public function setGoodByeSent(bool $goodByeSent): void
+    {
+        $this->goodbyeSent = $goodByeSent;
+    }
+
+    public function isGoodByeSent(): bool
+    {
+        return $this->goodbyeSent;
     }
 }

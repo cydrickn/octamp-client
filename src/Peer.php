@@ -135,9 +135,9 @@ class Peer
         } elseif ($message instanceof WelcomeMessage) {
             $this->processWelcome($message);
         } elseif ($message instanceof AbortMessage) {
-            // TODO do abort message
+            $this->processAbort($message);
         } elseif ($message instanceof GoodbyeMessage) {
-            // TODO do goodby message
+            $this->processGoodbye($message);
         } else {
             $this->processOther($this->session, $message);
         }
@@ -151,6 +151,11 @@ class Peer
     public function onOpen(callable $callback): void
     {
         $this->eventDispatcher->on('open', $callback);
+    }
+
+    public function onClose($callback): void
+    {
+        $this->eventDispatcher->on('close', $callback);
     }
 
     protected function processWelcome(WelcomeMessage $message): void
@@ -168,6 +173,21 @@ class Peer
         $this->session->setState(Session::STATE_CHALLENGE_SENT);
     }
 
+    protected function processAbort(AbortMessage $message): void
+    {
+        $this->eventDispatcher->emit('error', [$message->getResponseURI(), $message]);
+        $this->close();
+    }
+
+    protected function processGoodbye(GoodbyeMessage $message): void
+    {
+        if (!$this->session->isGoodByeSent()) {
+            $goodbyeMsg = new GoodbyeMessage(new \stdClass(), "wamp.close.goodbye_and_out");
+            $this->sendMessage($goodbyeMsg);
+            $this->session->setGoodByeSent(true);
+        }
+    }
+
     public function processOther(Session $session, Message $message): void
     {
         foreach ($this->roles as $role) {
@@ -178,12 +198,12 @@ class Peer
         }
     }
 
-    public function close(string $reason, string $message = ''): void
+    public function close(): void
     {
         $this->client->close();
     }
 
-    public function sendMessage(Message $message)
+    public function sendMessage(Message $message): void
     {
         Coroutine::create(function ($message) {
             $this->client->push(json_encode($message));
